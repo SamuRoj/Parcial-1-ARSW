@@ -14,9 +14,11 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String a[]) {
-        System.out.println(bytesToHex(PiDigits.getDigits(0, 10)));
-        System.out.println(bytesToHex(PiDigits.getDigits(1, 100)));
-        System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000)));
+        System.out.println(bytesToHex(PiDigits.getDigits(0, 100, 23)));
+        System.out.println(PiDigits.getDigits(0, 100, 23).length);
+        System.out.println("Without Threads.....................");
+        System.out.println(bytesToHex(PiDigits.getDigits(0, 100)));
+        System.out.println(bytesToHex(PiDigits.getDigits(0, 100)).contentEquals(bytesToHex(PiDigits.getDigits(0, 100, 23))));
     }
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
