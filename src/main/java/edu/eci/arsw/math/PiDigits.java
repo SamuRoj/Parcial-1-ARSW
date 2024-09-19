@@ -1,6 +1,7 @@
 package edu.eci.arsw.math;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 ///  <summary>
 ///  An implementation of the Bailey-Borwein-Plouffe formula for calculating hexadecimal
@@ -51,11 +52,11 @@ public class PiDigits {
 
     // Method with threads
     public static byte[] getDigits(int start, int count, int threadNumber){
-        int delta = start;
         int countPerThread = count / threadNumber;
+        int end = count + start;
 
-        ArrayList<PiThread> threads = new ArrayList<PiThread>();
-        ArrayList<Byte> digits = new ArrayList<Byte>();
+        ArrayList<PiThread> threads = new ArrayList<>();
+        ArrayList<Byte> digits = new ArrayList<>();
         if(count % threadNumber == 0){
             for(int i = 0; i < threadNumber; i++){
                 threads.add(new PiThread(start, countPerThread, new PiDigits()));
@@ -64,15 +65,13 @@ public class PiDigits {
             }
         }
         else{
-            // System.out.println("Count Per Thread: " + countPerThread);
             for(int i = 0; i < threadNumber - 1; i++){
                 threads.add(new PiThread(start, countPerThread, new PiDigits()));
-                // System.out.println("Start: " + start);
+                threads.get(i).run();
                 start += countPerThread;
-                threads.get(i).start();
             }
-            threads.add(new PiThread(start, count - start, new PiDigits()));
-            threads.get(threadNumber - 1).start();
+            threads.add(new PiThread(start, end - start, new PiDigits()));
+            threads.get(threadNumber - 1).run();
         }
 
         for(int i = 0; i < threadNumber; i++){
